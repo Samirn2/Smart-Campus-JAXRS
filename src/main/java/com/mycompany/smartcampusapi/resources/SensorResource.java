@@ -17,6 +17,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Path("/sensors")
@@ -27,8 +28,16 @@ public class SensorResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Sensor> getAllSensors(){
-        return sensorService.getAllSensors();
+    public List<Sensor> getAllSensors(@QueryParam("type")String type){
+        List<Sensor> allSensors = sensorService.getAllSensors();
+        
+        if(type == null || type.isEmpty()) {
+            return allSensors;
+        }
+        
+        return allSensors.stream()
+                .filter(s -> s.getType().equalsIgnoreCase(type))
+                .collect(Collectors.toList());
     }
     
     @POST
