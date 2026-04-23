@@ -5,6 +5,8 @@
 package com.mycompany.smartcampusapi.resources;
 import com.mycompany.smartcampus.models.SensorReading;
 import com.mycompany.smartcampus.service.SensorService;
+import com.mycompany.smartcampus.exceptions.SensorUnavailableException;
+import com.mycompany.smartcampus.models.Sensor;
 
 /**
  *
@@ -37,6 +39,17 @@ public class SensorReadingResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addReading(SensorReading newReading){
+        
+        Sensor sensor = sensorService.getSensorById(sensorId);
+        
+        if(sensor != null && "MAINTENANCE".equalsIgnoreCase(sensor.getStatus())){
+            throw new SensorUnavailableException(
+                    "Forbidden: Sensor [" + sensorId + "] is currently in MAINTENANCE."
+            );
+        }
+        
+        
+        
         
         //Saving the reading into the history
         sensorService.addReading(sensorId, newReading);

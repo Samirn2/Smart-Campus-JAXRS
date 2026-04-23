@@ -25,6 +25,11 @@ public class SensorService {
     
     private SensorService(){
         
+        //Adding active sensors for testing 
+        sensors.add(new Sensor("S1","Temperature","ACTIVE", 22.5, "R101"));
+        sensors.add(new Sensor("S2","Temperature","MAINTENANCE", 0.0, "R101"));
+        sensors.add(new Sensor("S3","CO2","ACTIVE", 450.0, "R102"));
+                 
     }
     
     public static synchronized SensorService getInstance() {
