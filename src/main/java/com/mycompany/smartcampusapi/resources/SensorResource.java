@@ -7,6 +7,7 @@ import com.mycompany.smartcampus.models.Room;
 import com.mycompany.smartcampus.models.Sensor;
 import com.mycompany.smartcampus.service.RoomService;
 import com.mycompany.smartcampus.service.SensorService;
+import com.mycompany.smartcampus.exceptions.LinkedResourceNotFoundException;
 
 /**
  *
@@ -57,10 +58,9 @@ public class SensorResource {
         
         //If the room doesn't exist, request will be rejected
         if(targetRoom == null) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("{\"error\": \"Validation Has Failed\", \"reason\": \"ROOM: " + 
-                            newSensor.getRoomId()+ " | Does not exist in system.\"}")
-                    .build();
+            throw new LinkedResourceNotFoundException(
+                    "Validation Failed: The Room ID " + newSensor.getRoomId() + " does not exist in the system."
+            );
         }
         
         sensorService.addSensor(newSensor);
