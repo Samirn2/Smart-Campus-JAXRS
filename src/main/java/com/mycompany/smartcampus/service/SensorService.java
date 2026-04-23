@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.smartcampus.service;
-import com.smartcampus.models.Sensor;
-import com.smartcampus.models.SensorReading;
+package com.mycompany.smartcampus.service;
+import com.mycompany.smartcampus.models.Sensor;
+import com.mycompany.smartcampus.models.SensorReading;
 
 /**
  *

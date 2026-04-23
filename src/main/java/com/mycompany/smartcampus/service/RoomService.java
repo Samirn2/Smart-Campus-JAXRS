@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.smartcampus.service;
+package com.mycompany.smartcampus.service;
 
-import com.smartcampus.models.Room;
+import com.mycompany.smartcampus.models.Room;
+import com.mycompany.smartcampus.exceptions.RoomNotEmptyException;
 
 /**
  *
@@ -51,20 +52,19 @@ public class RoomService {
                 .orElse(null);
     }
     
-    public String deleteRoom(String id) {
+    public void deleteRoom(String id) {
         Room room = getRoomById(id);
         
         // Checking if the room even  exist
         if(room == null) {
-            return "ROOM_NOT_FOUND";
+            return;
         }
         
         // Check if room has any sensors assigned to it
         if(room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
-            return "HAS_SENSORS";
+            throw new RoomNotEmptyException("Cannot delete room: Room is currently occupied by active hardware.  ");
         }
         
         rooms.remove(room);
-        return "SUCCESSFUL";
     }
 }

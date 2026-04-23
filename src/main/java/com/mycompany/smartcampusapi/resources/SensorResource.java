@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.smartcampusapi.resources;
-import com.smartcampus.models.Room;
-import com.smartcampus.models.Sensor;
-import com.smartcampus.service.RoomService;
-import com.smartcampus.service.SensorService;
+import com.mycompany.smartcampus.models.Room;
+import com.mycompany.smartcampus.models.Sensor;
+import com.mycompany.smartcampus.service.RoomService;
+import com.mycompany.smartcampus.service.SensorService;
 
 /**
  *
@@ -44,6 +44,13 @@ public class SensorResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerSensor(Sensor newSensor){
+        
+        // Leak proof guard, catches the null before crash 
+        if(newSensor == null){
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\": \"Bad Request\", \"message\": \"Sensor data is missing or formatted incorrectly.\"}")
+                    .build();
+        }
         
         //Checking if room exists
         Room targetRoom = roomService.getRoomById(newSensor.getRoomId());
