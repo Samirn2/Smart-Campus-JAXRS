@@ -4,6 +4,7 @@
  */
 package com.mycompany.smartcampusapi.resources;
 import com.smartcampus.models.SensorReading;
+import com.smartcampus.service.SensorService;
 
 /**
  *
@@ -14,10 +15,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.core.Response;
 
 public class SensorReadingResource {
     
     private String sensorId;
+    private final SensorService sensorService = SensorService.getInstance();
     
     public SensorReadingResource(String sensorId){
         this.sensorId = sensorId;
@@ -26,13 +29,20 @@ public class SensorReadingResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<SensorReading> getHistory(){
-        
-        List<SensorReading> history = new ArrayList<>();
-        
-        history.add(new SensorReading("SR-01", System.currentTimeMillis(), 22.5));
-        history.add(new SensorReading("SR-02", System.currentTimeMillis() - 60000, 21.8));
-        
-        return history;
+        //Has been changed to now fetch saved data in the service for sensor    
+        return sensorService.getReadingForSensor(sensorId);
+    }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addReading(SensorReading newReading){
+        
+        //Saving the reading into the history
+        sensorService.addReading(sensorId, newReading);
+        
+        return Response.status(Response.Status.CREATED)
+                .entity(newReading)
+                .build();
     }
 }

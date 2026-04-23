@@ -62,6 +62,22 @@ public class SensorResource {
         return Response.status(Response.Status.CREATED).entity(newSensor).build();
     }
     
+    // Fetch a single sensor specifcally via ID
+    @GET
+    @Path("/{sensorId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSensorById(@PathParam("sensorId") String id){
+        
+        Sensor sensor = sensorService.getSensorById(id);
+        
+        if(sensor == null){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\": \"Sensor not found\", \"id\": \"" + id + "\"}")
+                    .build();
+        }
+        return Response.ok(sensor).build();
+    }
+    
     @Path("/{sensorId}/readings")
     public SensorReadingResource getReadingsResource(@PathParam("sensorId") String sensorId){
         
