@@ -62,5 +62,10 @@ public class SensorResource {
         return Response.status(Response.Status.CREATED).entity(newSensor).build();
     }
     
+    @Path("/{sensorId}/readings")
+    public SensorReadingResource getReadingsResource(@PathParam("sensorId") String sensorId){
+        
+        return new SensorReadingResource(sensorId);
+    }
     
 }
