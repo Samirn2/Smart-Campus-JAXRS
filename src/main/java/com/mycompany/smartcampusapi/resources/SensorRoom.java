@@ -63,6 +63,32 @@ public class SensorRoom {
         
         return Response.ok(room).build();
     }
+    
+    @DELETE
+    @Path("/{roomId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteRoom(@PathParam("roomId") String roomId) {
+        String result = roomService.deleteRoom(roomId);
+        
+        switch(result){
+            case "SUCCESSFUL":
+                return Response.ok("{\"message\": \"Room successfully deleted\"}").build();
+            case "HAS_SENSORS":
+                //Specifc saftey logic for 2.2
+                return Response.status(Response.Status.CONFLICT)
+                        .entity("\"error\": \"Deletion blocked\", \"reason\": \"Room contains sensors.\"}")
+                        .build();
+            case "ROOM_NOT_FOUND":
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("{\"error\": \"Room not found\"}")
+                        .build();
+            default:
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+       
+
+
             
 }   
 

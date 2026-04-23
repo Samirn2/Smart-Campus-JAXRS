@@ -22,7 +22,10 @@ public class RoomService {
     
     private RoomService() {
         rooms.add(new Room("R101","Computing Lab", 40));
-        rooms.add(new Room("R102","Cyber Security", 25));
+        
+        Room room2 = new Room("R102","Cyber Security", 25);
+        room2.getSensorIds().add("SN-102");
+        rooms.add(room2);
         
     }
     
@@ -46,5 +49,22 @@ public class RoomService {
                 .filter(r -> r.getId().equalsIgnoreCase(id))
                 .findFirst()
                 .orElse(null);
+    }
+    
+    public String deleteRoom(String id) {
+        Room room = getRoomById(id);
+        
+        // Checking if the room even  exist
+        if(room == null) {
+            return "ROOM_NOT_FOUND";
+        }
+        
+        // Check if room has any sensors assigned to it
+        if(room.getSensorIds() != null && !room.getSensorIds().isEmpty()) {
+            return "HAS_SENSORS";
+        }
+        
+        rooms.remove(room);
+        return "SUCCESSFUL";
     }
 }
