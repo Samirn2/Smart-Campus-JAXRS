@@ -30,8 +30,14 @@ public class SensorResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Sensor> getAllSensors(@QueryParam("type")String type){
-        List<Sensor> allSensors = sensorService.getAllSensors();
         
+        // Trigger to crash to test 500 error 
+        if("crash".equalsIgnoreCase(type)){
+            throw new RuntimeException("Simulated Server Failure.");
+        }
+        
+        List<Sensor> allSensors = sensorService.getAllSensors();
+              
         if(type == null || type.isEmpty()) {
             return allSensors;
         }

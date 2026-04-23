@@ -25,7 +25,9 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable>{
         
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type(MediaType.APPLICATION_JSON)
-                .entity("{\"error\": \"Server Error\", \"message\": \"An unexpected error has occurred.\"}")
+                .entity("{\"error\": \"Internal Server Error\"," +
+                        "\"status\": 500," + 
+                        "\"message\": \"An unexpected error has occurred.\"}")
                 .build();
     }
 }
