@@ -129,12 +129,12 @@ Specific routes designed to demonstrate the backend architecture.
 ---
 
 ### Q1.1: 
-**In JAX-RS, resource classes are Request-Scoped by default.** This means the server creates a brand-new instance of the class for every single API request and destroys it once the response is sent. Because the class is disposed of after every request, I could not store sensor data in regular instance variables, as the data would reset to empty every time a request ended. To fix this, I used **static data structures** so the data remains in the server's memory even as the resource classes are created and destroyed. This approach keeps the API stateless and clean while ensuring that sensor readings are preserved in a centralised, thread-safe memory store.
+**In JAX-RS, resource classes are Request-Scoped by default.** This means the server creates a brand-new instance of the class for every single API request and destroys it once the response is sent. Because the class is disposed of after every request, I could not store sensor data in regular instance variables, as the data would reset to empty every time a request ended. To fix this, I used **static data structures** so the data remains in the server's memory even as the resource classes are created and destroyed. This approach keeps the API stateless and clean while ensuring that sensor readings are kept in central shared memeory that is designed to handle mutiple request at the same time.
 
 ---
 
 ### Q1.2: 
-**Hypermedia makes an API self-descriptive by providing links that guide the client on what actions they can take next.** This transforms the API from a static data source into a dynamic system where the response drives the application state. It offers significant URL flexibility because clients follow relationship links rather than hardcoded paths, allowing the backend to evolve without breaking the client's code. It also makes navigation much easier, as the API provides a real-time roadmap of related resources—such as links to sensors within a room—which reduces the need for external documentation.
+**Hypermedia makes an API self-descriptive by including links that show the client what they can do next, turning a simple response into a navigable roadmap.** This is much better than standard APIs where developers often hardcode URLs, as hardcoding causes the app to break if the backend structure ever changes. With Hypermedia, the client follows relationship links provided by the server, meaning the backend can rename or move endpoints without the client needing to update their code. This makes the API far more flexible and easier to use, as the links act as a real-time guide for the developer instead of them having to constantly check a manual.
 
 ---
 
