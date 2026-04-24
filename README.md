@@ -139,17 +139,17 @@ Specific routes designed to demonstrate the backend architecture.
 ---
 
 ### Q2.1: 
-**Choosing between returning only IDs or full room objects is a trade-off between network efficiency and the speed of the user interface.** Returning only IDs significantly minimises network bandwidth because the payload is extremely small, but it increases the burden of client-side processing as the client must perform additional API requests to retrieve basic details for each ID. Returning full objects consumes more bandwidth during the initial transfer but is much more efficient for the client, as all necessary information is available immediately for rendering without the need for further server calls.
+**Choosing between returning only IDs or full room objects is a trade-off between network efficiency and the speed of the user interface.** Returning only IDs significantly minimises network bandwidth because the payload is extremely small, but it increases the burden of client-side processing as the client must perform additional API requests to retrieve basic details for each ID. Returning full objects consumes more bandwidth during the initial transfer but is much more efficient for the client, as all necessary information is available immediately for rendering without needing to make futher request.
 
 ---
 
 ### Q2.2: 
-**The `DELETE` operation is idempotent in this implementation because multiple identical requests result in the same final state on the server.** When a client sends the first `DELETE` request for a specific ID, the server locates and removes that resource. If the client mistakenly sends the exact same request again, the server finds that the resource no longer exists and performs no further changes. Since the end result—the absence of the resource from the database—is the same whether the request is sent once or many times, the operation is idempotent.
+**Yes, the DELETE operation in my implementation is idempotent because multiple identical requests result in the same final state on the server.** In the initial request, when a client sends the first DELETE request for a specific room ID, the server locates that room in the data store and removes it. At this point, the resource is successfully deleted. If the client mistakenly sends the exact same request again, the server searches for that room ID and finds that it no longer exists. Consequently, the server performs no further actions and the data remains unchanged.
 
 ---
 
 ### Q3.1: 
-**The `@Consumes` annotation acts as a strict guard for API endpoints by specifying exactly which data formats the server is prepared to process.** If a client attempts to send data in an unsupported format, such as `text/plain` or `application/xml`, the JAX-RS framework identifies the conflict between the client's `Content-Type` header and the required media type. Instead of allowing the request to reach the method logic, the framework automatically intercepts the call and returns an `HTTP 415 Unsupported Media Type` status code to prevent the application from attempting to parse incompatible data.
+**The `@Consumes` annotation acts as a strict guard for API endpoints by specifying exactly which data formats the server is prepared to process.** If a client attempts to send data in an unsupported format, such as `text/plain` or `application/xml`, the JAX-RS framework identifies the conflict between the client's `Content-Type` header and the required media type. Instead of allowing the request to reach the method logic, the framework automatically intercepts the call and returns an `HTTP 415 Unsupported Media Type` status code to prevent the application from attempting to recieve incompatible data.
 
 ---
 
@@ -159,7 +159,7 @@ Specific routes designed to demonstrate the backend architecture.
 ---
 
 ### Q4.1: 
-**The Sub-Resource Locator pattern is an effective way to keep code organised as an API expands by delegating logic to smaller, specialised classes.** Instead of building one massive class to manage every nested path, the `RoomResource` handles room-level data and then passes the request to a separate `SensorResource` for sensor-specific logic. This prevents the codebase from becoming cluttered and difficult to debug. Ultimately, this makes the API much easier to maintain because changes to sensor logic are contained within their own class rather than being buried in room-related code.
+**The Sub-Resource Locator pattern is an effective way to keep code organised as an API expands by passing logic to smaller, specialised classes.** Instead of building one massive class to manage every nested path, the `RoomResource` handles room-level data and then passes the request to a separate `SensorResource` for sensor-specific logic. This prevents the codebase from becoming cluttered and difficult to debug. Ultimately, this makes the API much easier to maintain because changes to sensor logic are contained within their own class rather than being buried in code.
 
 ---
 
@@ -174,4 +174,4 @@ Specific routes designed to demonstrate the backend architecture.
 ---
 
 ### Q5.5: 
-**Using JAX-RS filters for logging is more efficient because it centralises the logic and follows the principle of not repeating code.** Instead of manually adding log statements to every single method, a filter automatically applies the logic to all incoming requests in one place. This keeps resource classes clean and focused on their primary tasks rather than being cluttered with repetitive boilerplate code. It also ensures total consistency across the API, as developers do not have to worry about forgetting to log a new endpoint.
+**Using JAX-RS filters for logging is more efficient because it centralises the logic and follows the principle of not repeating code.** Instead of manually adding log statements to every single method, a filter automatically applies the logic to all incoming requests in one place. This keeps resource classes clean and focused on their primary tasks rather than being cluttered with repetitive code. It also ensures total consistency across the API, as developers do not have to worry about forgetting to log a new endpoint.
