@@ -43,14 +43,10 @@ public class SensorReadingResource {
         Sensor sensor = sensorService.getSensorById(sensorId);
         
         if(sensor != null && "MAINTENANCE".equalsIgnoreCase(sensor.getStatus())){
-            throw new SensorUnavailableException(
-                    "Forbidden: Sensor [" + sensorId + "] is currently in MAINTENANCE."
-            );
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("{\"error\":\"Forbidden: Sensor [" + sensorId + "] is in MAINTENANCE.\"}")
+                    .build();
         }
-        
-        
-        
-        
         //Saving the reading into the history
         sensorService.addReading(sensorId, newReading);
         

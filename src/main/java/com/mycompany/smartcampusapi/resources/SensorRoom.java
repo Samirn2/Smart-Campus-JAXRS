@@ -13,8 +13,7 @@ import com.mycompany.smartcampus.service.RoomService;
  */
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.List;
 
 
@@ -34,7 +33,7 @@ public class SensorRoom {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createRoom(Room newRoom) {
+    public Response createRoom(Room newRoom, @Context javax.ws.rs.core.UriInfo uriInfo) {
         if(newRoom == null || newRoom.getId() == null){
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("{\"error\": \"Room data is incomplete\"}")
@@ -43,7 +42,12 @@ public class SensorRoom {
     
     roomService.addRoom(newRoom);
     
-    return Response.status(Response.Status.CREATED)
+    java.net.URI location = uriInfo.getAbsolutePathBuilder()
+                                   .path(newRoom.getId())
+                                   .build();
+            
+            
+    return Response.created(location)
             .entity(newRoom)
             .build();
     }
@@ -76,6 +80,12 @@ public class SensorRoom {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("{\"error\": \"Room not found.\"}")
                     .build();  
+        }
+        
+        if(room.getSensorIds()!= null && !room.getSensorIds().isEmpty()){
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("{\"error\": \"Cannot delete room. Sensors are still assigned to it.\"}")
+                    .build();
         }
         
         roomService.deleteRoom(roomId);
