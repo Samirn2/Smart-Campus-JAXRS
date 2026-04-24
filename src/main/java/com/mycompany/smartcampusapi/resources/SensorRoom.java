@@ -36,7 +36,7 @@ public class SensorRoom {
     public Response createRoom(Room newRoom, @Context javax.ws.rs.core.UriInfo uriInfo) {
         if(newRoom == null || newRoom.getId() == null){
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("{\"error\": \"Room data is incomplete\"}")
+                    .entity("{\"error\": \"Room data is incomplete.\"}")
                     .build();
         }
     
